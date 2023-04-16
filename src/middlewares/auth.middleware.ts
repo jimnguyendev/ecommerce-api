@@ -1,11 +1,11 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import { verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
 import { HttpException } from '@exceptions/httpException';
 import { DataStoredInToken, RequestWithUser } from '@interfaces/auth.interface';
 import { UserModel } from '@models/users.model';
 
-const getAuthorization = req => {
+const getAuthorization = (req: Request) => {
   const coockie = req.cookies['Authorization'];
   if (coockie) return coockie;
 
@@ -17,10 +17,10 @@ const getAuthorization = req => {
 
 export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const Authorization = getAuthorization(req);
+    const authorization = getAuthorization(req);
 
-    if (Authorization) {
-      const { id } = (await verify(Authorization, SECRET_KEY)) as DataStoredInToken;
+    if (authorization) {
+      const { id } = verify(authorization, SECRET_KEY) as DataStoredInToken;
       const findUser = UserModel.find(user => user.id === id);
 
       if (findUser) {
