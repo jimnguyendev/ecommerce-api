@@ -15,7 +15,7 @@ const getAuthorization = (req: Request) => {
   return null;
 };
 
-export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+export const AuthMiddleware = async (req: RequestWithUser, _: Response, next: NextFunction) => {
   try {
     const authorization = getAuthorization(req);
 
